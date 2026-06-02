@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Serenity",
+    "description": "Acrylic on canvas, 2024. A study in peace and stillness.",
+    "medium": "acrylic",
+    "src": "assets/paintings/painting1.jpg"
+  },
+  {
+    "title": "The Blue Hour",
+    "description": "Watercolor on paper, 2024. Twilight landscape.",
+    "medium": "watercolor",
+    "src": "assets/paintings/painting2.jpg"
+  },
+  {
+    "title": "Bloom",
+    "description": "Oil on canvas, 2023. A celebration of life in color.",
+    "medium": "oil",
+    "src": "assets/paintings/painting3.jpg"
+  },
+  {
+    "title": "Digital Dreams",
+    "description": "Digital art, 2024. Created with tablet and stylus.",
+    "medium": "digital",
+    "src": "assets/paintings/painting4.jpg"
+  }
+]

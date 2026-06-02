@@ -1,0 +1,276 @@
+/* ══════════════════════════════════════════════
+   HOME.CSS — Hero, Float Cards, Scroll Hint
+══════════════════════════════════════════════ */
+
+#home {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 100px 48px 60px;
+  gap: 0;
+  position: relative;
+}
+
+#home.active {
+  display: flex;
+}
+
+/* ── Hero ────────────────────────────────── */
+.hero-container {
+  max-width: 700px;
+  z-index: 2;
+  position: relative;
+}
+
+.hero-tag {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fade-up 0.8s 0.2s forwards;
+}
+
+.hero-title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  line-height: 1.0;
+  margin-bottom: 28px;
+}
+
+.hero-title .line {
+  display: block;
+  font-size: clamp(4rem, 9vw, 8rem);
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.hero-title .line-1 { animation: fade-up 0.9s 0.4s forwards; }
+.hero-title .line-2 {
+  animation: fade-up 0.9s 0.55s forwards;
+  font-style: italic;
+  color: var(--accent2);
+}
+.hero-title .line-3 { animation: fade-up 0.9s 0.7s forwards; }
+
+.hero-sub {
+  font-size: 17px;
+  font-weight: 300;
+  color: var(--text2);
+  line-height: 1.75;
+  max-width: 520px;
+  margin-bottom: 44px;
+  opacity: 0;
+  animation: fade-up 0.9s 0.9s forwards;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fade-up 0.9s 1.05s forwards;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 30px;
+  border-radius: 100px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1.5px solid transparent;
+}
+
+.cta-art {
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: 0 0 24px var(--glow);
+}
+
+.cta-art:hover {
+  background: var(--accent3);
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px var(--glow);
+}
+
+.cta-books {
+  background: transparent;
+  color: var(--accent2);
+  border-color: rgba(200,169,110,0.35);
+}
+
+.cta-books:hover {
+  background: rgba(200,169,110,0.1);
+  border-color: var(--accent2);
+  transform: translateY(-2px);
+}
+
+/* ── Float Cards ─────────────────────────── */
+.float-cards {
+  position: absolute;
+  right: 48px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 2;
+  opacity: 0;
+  animation: fade-left 1s 1.2s forwards;
+}
+
+.float-card {
+  width: 240px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+  animation: float-bob 6s ease-in-out infinite;
+}
+
+.float-card:nth-child(2) {
+  animation-delay: 1s;
+}
+
+.float-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: var(--accent);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(200,169,110,0.2);
+}
+
+.card-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.float-card:hover .card-shimmer {
+  transform: translateX(100%);
+}
+
+.card-inner { position: relative; z-index: 1; }
+
+.card-icon {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.card-inner h3 {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.card-inner p {
+  font-size: 13px;
+  color: var(--text2);
+  font-weight: 300;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.card-arrow {
+  font-size: 18px;
+  color: var(--accent);
+  transition: transform var(--transition);
+}
+
+.float-card:hover .card-arrow {
+  transform: translateX(6px);
+}
+
+/* ── Scroll Hint ─────────────────────────── */
+.scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: fade-in 1s 1.8s forwards;
+}
+
+.scroll-hint span {
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--text3), transparent);
+  animation: scroll-pulse 2s ease-in-out infinite;
+}
+
+@keyframes scroll-pulse {
+  0%, 100% { opacity: 1; transform: scaleY(1); }
+  50% { opacity: 0.3; transform: scaleY(0.5); }
+}
+
+/* ── Keyframes ───────────────────────────── */
+@keyframes fade-up {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-left {
+  from { opacity: 0; transform: translateY(-50%) translateX(40px); }
+  to   { opacity: 1; transform: translateY(-50%) translateX(0); }
+}
+
+@keyframes fade-in {
+  to { opacity: 1; }
+}
+
+@keyframes float-bob {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+/* ── Responsive ──────────────────────────── */
+@media (max-width: 900px) {
+  .float-cards {
+    position: relative;
+    right: auto; top: auto;
+    transform: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 48px;
+    animation: fade-up 0.9s 1.2s forwards;
+  }
+
+  .float-card { width: 200px; }
+
+  #home {
+    align-items: center;
+    text-align: center;
+    padding: 100px 20px 60px;
+  }
+
+  .hero-ctas { justify-content: center; }
+}

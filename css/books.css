@@ -1,0 +1,461 @@
+/* ══════════════════════════════════════════════
+   BOOKS.CSS — Book Grid, PDF Reader, Toolbar
+══════════════════════════════════════════════ */
+
+/* ── Books Grid ──────────────────────────── */
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── Book Card ───────────────────────────── */
+.book-card-item {
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.book-card-item:hover {
+  transform: translateY(-8px);
+}
+
+.book-cover-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2/3;
+  border-radius: 6px 12px 12px 6px;
+  overflow: hidden;
+  box-shadow: -4px 4px 16px rgba(0,0,0,0.5), 4px 8px 24px rgba(0,0,0,0.4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: box-shadow var(--transition);
+  /* Book spine effect */
+}
+
+.book-cover-wrap::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 10px;
+  background: linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0.1), transparent);
+  z-index: 5;
+  border-radius: 6px 0 0 6px;
+}
+
+.book-card-item:hover .book-cover-wrap {
+  box-shadow: -6px 6px 24px rgba(0,0,0,0.6), 8px 16px 40px rgba(0,0,0,0.5);
+}
+
+.book-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Default cover for books without image */
+.book-cover-default {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, var(--surface2), var(--bg3));
+  text-align: center;
+  gap: 12px;
+}
+
+.book-cover-default .book-icon-large {
+  font-size: 40px;
+}
+
+.book-cover-default .book-title-default {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.book-cover-default .book-author-default {
+  font-size: 12px;
+  color: var(--accent2);
+  font-style: italic;
+}
+
+/* ── Open badge ─────────────────────────── */
+.book-open-badge {
+  position: absolute;
+  inset: 0;
+  background: rgba(200,169,110,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition);
+  z-index: 10;
+}
+
+.book-card-item:hover .book-open-badge {
+  opacity: 1;
+}
+
+.book-open-badge span {
+  background: var(--accent);
+  color: var(--bg);
+  padding: 10px 22px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── Book meta below cover ───────────────── */
+.book-meta {
+  margin-top: 16px;
+  text-align: center;
+  width: 100%;
+}
+
+.book-meta h4 {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.book-meta .book-author {
+  font-size: 12px;
+  color: var(--text2);
+  font-style: italic;
+  margin-bottom: 6px;
+}
+
+.book-meta .book-genre {
+  display: inline-block;
+  padding: 3px 10px;
+  border: 1px solid var(--border2);
+  border-radius: 100px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+/* ══════════════════════ PDF MODAL ══════════════════════ */
+.pdf-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 980;
+  background: var(--bg);
+  display: none;
+  flex-direction: column;
+}
+
+.pdf-modal.open {
+  display: flex;
+}
+
+.pdf-modal.dark-mode {
+  --pdf-bg: #111;
+}
+
+.pdf-modal-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Toolbar ─────────────────────────────── */
+.pdf-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  gap: 12px;
+  flex-wrap: wrap;
+  z-index: 10;
+}
+
+.pdf-toolbar-left,
+.pdf-toolbar-center,
+.pdf-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pdf-title {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text);
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text2);
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.pdf-btn svg {
+  width: 16px; height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+.pdf-btn:hover {
+  background: var(--surface2);
+  border-color: var(--border2);
+  color: var(--text);
+}
+
+.pdf-btn.active {
+  background: rgba(200,169,110,0.15);
+  border-color: var(--accent);
+  color: var(--accent2);
+}
+
+.pdf-page-info {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--text2);
+}
+
+#currentPageInput {
+  width: 52px;
+  padding: 6px 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  text-align: center;
+}
+
+#currentPageInput:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.zoom-level {
+  font-size: 13px;
+  color: var(--text2);
+  min-width: 44px;
+  text-align: center;
+}
+
+/* ── Bookmarks Panel ─────────────────────── */
+.bookmarks-panel {
+  position: fixed;
+  right: 0; top: 60px; bottom: 0;
+  width: 260px;
+  background: var(--bg2);
+  border-left: 1px solid var(--border);
+  padding: 20px;
+  transform: translateX(100%);
+  transition: transform var(--transition);
+  z-index: 20;
+  overflow-y: auto;
+}
+
+.bookmarks-panel.open {
+  transform: translateX(0);
+}
+
+.bookmarks-panel h4 {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+#bookmarkList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#bookmarkList li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text2);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+#bookmarkList li:hover {
+  border-color: var(--accent);
+  color: var(--accent2);
+}
+
+#bookmarkList li .bm-del {
+  color: var(--text3);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: var(--transition);
+}
+
+#bookmarkList li .bm-del:hover {
+  color: var(--red);
+  background: rgba(232,112,112,0.1);
+}
+
+.bm-empty {
+  font-size: 13px;
+  color: var(--text3);
+  text-align: center;
+  line-height: 1.6;
+  margin-top: 8px;
+}
+
+/* ── PDF Viewer ─────────────────────────── */
+.pdf-viewer-area {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px;
+  background: var(--bg);
+  position: relative;
+}
+
+.pdf-modal.dark-mode .pdf-viewer-area {
+  background: #0d0d0d;
+}
+
+.pdf-canvas-wrap {
+  position: relative;
+  display: inline-block;
+  box-shadow: var(--shadow2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+#pdfCanvas {
+  display: block;
+  max-width: 100%;
+}
+
+.pdf-modal.dark-mode #pdfCanvas {
+  filter: invert(0.9) hue-rotate(180deg);
+}
+
+/* ── Highlight Layer ─────────────────────── */
+.highlight-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.pdf-modal.highlight-active .pdf-canvas-wrap {
+  cursor: crosshair;
+}
+
+.highlight-rect {
+  position: absolute;
+  background: rgba(255, 214, 0, 0.3);
+  border: 1px solid rgba(255, 214, 0, 0.6);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* ── PDF Loading ─────────────────────────── */
+.pdf-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: var(--bg);
+  z-index: 10;
+}
+
+.pdf-loading.hidden { display: none; }
+
+.loader-ring {
+  width: 44px; height: 44px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.pdf-loading span {
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  color: var(--text2);
+  text-transform: uppercase;
+}
+
+/* ── Responsive ──────────────────────────── */
+@media (max-width: 768px) {
+  .books-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
+
+  .pdf-toolbar {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .pdf-title { max-width: 120px; font-size: 15px; }
+
+  .pdf-toolbar-center { order: 3; width: 100%; justify-content: center; }
+
+  .bookmarks-panel { width: 220px; top: 110px; }
+
+  .pdf-viewer-area { padding: 16px; }
+}
