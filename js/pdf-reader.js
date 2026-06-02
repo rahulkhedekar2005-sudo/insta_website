@@ -51,15 +51,12 @@ function renderBooks(books) {
           : `<div class="book-cover-default">
                <span class="book-icon-large">📖</span>
                <span class="book-title-default">${escHtml(book.title)}</span>
-               <span class="book-author-default">${escHtml(book.author || '')}</span>
              </div>`
         }
         <div class="book-open-badge"><span>Open Book</span></div>
       </div>
       <div class="book-meta">
         <h4>${escHtml(book.title)}</h4>
-        ${book.author ? `<div class="book-author">${escHtml(book.author)}</div>` : ''}
-        ${book.genre  ? `<span class="book-genre">${escHtml(book.genre)}</span>` : ''}
       </div>
     </div>
   `).join('');

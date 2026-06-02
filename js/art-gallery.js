@@ -6,11 +6,21 @@ let artworks = [];
 let filteredArtworks = [];
 let currentLbIndex = 0;
 
+// Fisher-Yates Shuffle
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 // ── Load artworks from JSON ───────────────────
 async function loadArtworks() {
   try {
     const res = await fetch('data/artworks.json');
-    artworks = await res.json();
+    const data = await res.json();
+    artworks = shuffle(data);
     filteredArtworks = [...artworks];
     renderGallery();
   } catch (e) {
@@ -44,7 +54,6 @@ function renderGallery() {
       <div class="art-overlay">
         <h4>${art.title}</h4>
         <p>${art.description || ''}</p>
-        <span class="art-tag">${art.medium || ''}</span>
       </div>
     </div>
   `).join('');
@@ -87,20 +96,6 @@ function injectWatermark(containerId) {
   });
 }
 
-// ── Filter Buttons ────────────────────────────
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    const filter = btn.dataset.filter;
-    filteredArtworks = filter === 'all'
-      ? [...artworks]
-      : artworks.filter(a => (a.medium || '').toLowerCase() === filter.toLowerCase());
-
-    renderGallery();
-  });
-});
 
 // ══════════ LIGHTBOX ══════════════════════════
 
@@ -123,7 +118,6 @@ function updateLightbox() {
   document.getElementById('lbImage').alt  = art.title;
   document.getElementById('lbTitle').textContent  = art.title;
   document.getElementById('lbDesc').textContent   = art.description || '';
-  document.getElementById('lbMedium').textContent = art.medium || '';
 }
 
 function lbNavPrev() {
