@@ -6,7 +6,7 @@
 let pdfDoc       = null;
 let currentPage  = 1;
 let totalPages   = 0;
-let zoomLevel    = 1.0;
+let zoomLevel    = 0.4;
 let highlightMode = false;
 let bookmarks    = {};   // { bookTitle: [pageNums] }
 let currentBookTitle = '';
@@ -75,7 +75,7 @@ window.openBook = async function(pdfPath, title) {
   currentBookTitle = title;
   document.getElementById('pdfTitle').textContent = title;
   currentPage = 1;
-  zoomLevel   = 1.0;
+  zoomLevel   = 0.4;
   updateZoomDisplay();
   clearHighlights();
 
