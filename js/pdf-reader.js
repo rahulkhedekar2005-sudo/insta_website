@@ -13,6 +13,9 @@ let currentBookTitle = '';
 let isHighlighting = false;
 let hlStart      = { x: 0, y: 0 };
 let darkMode     = false;
+let scrollMode   = false;
+let scrollPagesRendered = {}; // { pageNum: zoomLevel }
+let scrollObserver = null;
 
 // ── DOM refs ─────────────────────────────────
 const modal        = document.getElementById('pdfModal');
@@ -87,7 +90,11 @@ window.openBook = async function(pdfPath, title) {
     // Load saved bookmarks for this book
     loadBookmarksForBook(title);
 
-    await renderPage(currentPage);
+    if (scrollMode) {
+      await initScrollView();
+    } else {
+      await renderPage(currentPage);
+    }
   } catch (err) {
     loadingEl.innerHTML = `<p style="color:var(--red)">Could not load PDF.<br>${err.message}</p>`;
     console.error(err);
@@ -97,6 +104,11 @@ window.openBook = async function(pdfPath, title) {
 // ══════════════════ RENDER PAGE ═══════════════
 
 async function renderPage(num) {
+  if (scrollMode) {
+    scrollToScrollPage(num);
+    return;
+  }
+
   loadingEl.classList.remove('hidden');
   clearHighlights();
 
@@ -144,11 +156,27 @@ function updateZoomDisplay() {
 }
 
 document.getElementById('zoomIn').addEventListener('click', () => {
-  if (zoomLevel < 3.0) { zoomLevel = Math.min(3.0, zoomLevel + 0.15); updateZoomDisplay(); renderPage(currentPage); }
+  if (zoomLevel < 3.0) {
+    zoomLevel = Math.min(3.0, zoomLevel + 0.15);
+    updateZoomDisplay();
+    if (scrollMode) {
+      updateScrollScale();
+    } else {
+      renderPage(currentPage);
+    }
+  }
 });
 
 document.getElementById('zoomOut').addEventListener('click', () => {
-  if (zoomLevel > 0.4) { zoomLevel = Math.max(0.4, zoomLevel - 0.15); updateZoomDisplay(); renderPage(currentPage); }
+  if (zoomLevel > 0.4) {
+    zoomLevel = Math.max(0.4, zoomLevel - 0.15);
+    updateZoomDisplay();
+    if (scrollMode) {
+      updateScrollScale();
+    } else {
+      renderPage(currentPage);
+    }
+  }
 });
 
 // ══════════════════ HIGHLIGHT ═════════════════
@@ -271,6 +299,20 @@ function closeReader() {
   modal.classList.remove('open');
   document.body.classList.remove('pdf-open');
   pdfDoc = null;
+  
+  if (scrollObserver) {
+    scrollObserver.disconnect();
+    scrollObserver = null;
+  }
+  
+  const scrollContainer = document.getElementById('pdfScrollContainer');
+  if (scrollContainer) {
+    scrollContainer.remove();
+  }
+  
+  scrollPagesRendered = {};
+  canvasWrap.style.display = 'inline-block';
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   loadingEl.classList.remove('hidden');
 }
@@ -282,6 +324,168 @@ function flashBtn(id) {
   btn.style.transform = 'scale(1.2)';
   setTimeout(() => btn.style.transform = '', 200);
 }
+
+// ══════════════════ CONTINUOUS SCROLL VIEW ═══════════════════
+
+async function initScrollView() {
+  loadingEl.classList.remove('hidden');
+  clearHighlights();
+
+  let scrollContainer = document.getElementById('pdfScrollContainer');
+  if (!scrollContainer) {
+    scrollContainer = document.createElement('div');
+    scrollContainer.id = 'pdfScrollContainer';
+    scrollContainer.className = 'pdf-scroll-container';
+    viewerArea.appendChild(scrollContainer);
+  }
+
+  scrollContainer.innerHTML = '';
+  scrollPagesRendered = {};
+  canvasWrap.style.display = 'none';
+
+  try {
+    const firstPage = await pdfDoc.getPage(1);
+    const firstViewport = firstPage.getViewport({ scale: zoomLevel * 1.5 });
+
+    for (let i = 1; i <= totalPages; i++) {
+      const pageWrap = document.createElement('div');
+      pageWrap.className = 'pdf-scroll-page-wrap';
+      pageWrap.id = `page-wrap-${i}`;
+      pageWrap.dataset.page = i;
+      pageWrap.style.width = firstViewport.width + 'px';
+      pageWrap.style.height = firstViewport.height + 'px';
+
+      const pageCanvas = document.createElement('canvas');
+      pageCanvas.id = `page-canvas-${i}`;
+      pageCanvas.width = firstViewport.width;
+      pageCanvas.height = firstViewport.height;
+      pageWrap.appendChild(pageCanvas);
+
+      const label = document.createElement('div');
+      label.className = 'pdf-page-number-label';
+      label.textContent = `Page ${i} / ${totalPages}`;
+      pageWrap.appendChild(label);
+
+      scrollContainer.appendChild(pageWrap);
+    }
+
+    loadingEl.classList.add('hidden');
+
+    if (scrollObserver) scrollObserver.disconnect();
+
+    scrollObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const pageNum = parseInt(entry.target.dataset.page);
+          renderScrollPage(pageNum);
+          
+          currentPage = pageNum;
+          document.getElementById('currentPageInput').value = pageNum;
+          updateBookmarkIcon();
+        }
+      });
+    }, {
+      root: viewerArea,
+      rootMargin: '200px 0px',
+      threshold: 0.1
+    });
+
+    document.querySelectorAll('.pdf-scroll-page-wrap').forEach(wrap => {
+      scrollObserver.observe(wrap);
+    });
+
+  } catch (err) {
+    loadingEl.innerHTML = `<p style="color:var(--red)">Error initializing scroll view.<br>${err.message}</p>`;
+    console.error(err);
+  }
+}
+
+async function renderScrollPage(pageNum) {
+  if (scrollPagesRendered[pageNum] === zoomLevel) return;
+  scrollPagesRendered[pageNum] = zoomLevel;
+
+  try {
+    const page = await pdfDoc.getPage(pageNum);
+    const viewport = page.getViewport({ scale: zoomLevel * 1.5 });
+
+    const canvas = document.getElementById(`page-canvas-${pageNum}`);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+
+    const wrap = document.getElementById(`page-wrap-${pageNum}`);
+    if (wrap) {
+      wrap.style.width = viewport.width + 'px';
+      wrap.style.height = viewport.height + 'px';
+    }
+
+    await page.render({ canvasContext: ctx, viewport }).promise;
+  } catch (err) {
+    console.error('Error rendering scroll page ' + pageNum, err);
+  }
+}
+
+async function updateScrollScale() {
+  if (!pdfDoc) return;
+  loadingEl.classList.remove('hidden');
+  scrollPagesRendered = {};
+
+  try {
+    const firstPage = await pdfDoc.getPage(1);
+    const firstViewport = firstPage.getViewport({ scale: zoomLevel * 1.5 });
+
+    for (let i = 1; i <= totalPages; i++) {
+      const wrap = document.getElementById(`page-wrap-${i}`);
+      const canvas = document.getElementById(`page-canvas-${i}`);
+      if (wrap && canvas) {
+        wrap.style.width = firstViewport.width + 'px';
+        wrap.style.height = firstViewport.height + 'px';
+        canvas.width = firstViewport.width;
+        canvas.height = firstViewport.height;
+      }
+    }
+    loadingEl.classList.add('hidden');
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function scrollToScrollPage(pageNum) {
+  const wrap = document.getElementById(`page-wrap-${pageNum}`);
+  if (wrap) {
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    currentPage = pageNum;
+    document.getElementById('currentPageInput').value = pageNum;
+    updateBookmarkIcon();
+  }
+}
+
+// ── Toggle Scroll View listener ──────────────
+document.getElementById('toggleScroll').addEventListener('click', () => {
+  scrollMode = !scrollMode;
+  document.getElementById('toggleScroll').classList.toggle('active', scrollMode);
+
+  if (scrollMode) {
+    initScrollView();
+  } else {
+    if (scrollObserver) {
+      scrollObserver.disconnect();
+      scrollObserver = null;
+    }
+
+    const scrollContainer = document.getElementById('pdfScrollContainer');
+    if (scrollContainer) {
+      scrollContainer.remove();
+    }
+
+    scrollPagesRendered = {};
+    canvasWrap.style.display = 'inline-block';
+
+    renderPage(currentPage);
+  }
+});
 
 // ── Init ──────────────────────────────────────
 loadBooks();

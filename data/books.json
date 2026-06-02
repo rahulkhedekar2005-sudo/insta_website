@@ -1,23 +1,9 @@
 [
   {
-    "title": "My First Book",
-    "author": "Your Name",
-    "genre": "Fiction",
-    "cover": "assets/books/covers/book1-cover.jpg",
-    "pdf":   "assets/books/book1.pdf"
-  },
-  {
-    "title": "Art of Painting",
-    "author": "Your Name",
-    "genre": "Art & Craft",
-    "cover": "assets/books/covers/book2-cover.jpg",
-    "pdf":   "assets/books/book2.pdf"
-  },
-  {
-    "title": "Stories Untold",
-    "author": "Your Name",
-    "genre": "Short Stories",
-    "cover": "",
-    "pdf":   "assets/books/book3.pdf"
+    "title": "दोन तिकीट",
+    "author": "Rahul",
+    "genre": "Drama",
+    "cover": "assets/books/covers/printing_book_page-0000.jpg",
+    "pdf": "assets/books/दोन तिकीट.pdf"
   }
 ]

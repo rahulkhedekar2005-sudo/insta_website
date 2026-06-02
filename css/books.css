@@ -459,3 +459,50 @@
 
   .pdf-viewer-area { padding: 16px; }
 }
+
+/* ── Continuous Scroll View Styles ───────── */
+.pdf-scroll-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+}
+
+.pdf-scroll-page-wrap {
+  position: relative;
+  box-shadow: var(--shadow2);
+  border-radius: 4px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform var(--transition);
+}
+
+.pdf-scroll-page-wrap canvas {
+  display: block;
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+.pdf-modal.dark-mode .pdf-scroll-page-wrap {
+  background: #1e1e1e;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.8);
+}
+
+.pdf-modal.dark-mode .pdf-scroll-page-wrap canvas {
+  filter: invert(0.9) hue-rotate(180deg);
+}
+
+.pdf-page-number-label {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  pointer-events: none;
+  text-transform: uppercase;
+}
