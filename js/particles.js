@@ -23,9 +23,9 @@
       this.r   = Math.random() * 2 + 0.5;
       this.vx  = (Math.random() - 0.5) * 0.4;
       this.vy  = -(Math.random() * 0.5 + 0.1);
-      this.alpha = Math.random() * 0.5 + 0.1;
+      this.alpha = Math.random() * 0.4 + 0.08;
       this.pulse = Math.random() * Math.PI * 2;
-      this.gold  = Math.random() > 0.75;
+      this.gold  = Math.random() > 0.3;
     }
 
     update() {
@@ -50,8 +50,8 @@
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
       ctx.fillStyle = this.gold
-        ? `rgba(200,169,110,${a})`
-        : `rgba(180,180,220,${a * 0.6})`;
+        ? `rgba(196,162,101,${a})`
+        : `rgba(180,150,100,${a * 0.5})`;
       ctx.fill();
     }
   }
@@ -79,7 +79,7 @@
       ctx.beginPath();
       ctx.moveTo(this.x1, this.y1);
       ctx.lineTo(this.x2, this.y2);
-      ctx.strokeStyle = `rgba(200,169,110,${this.alpha})`;
+      ctx.strokeStyle = `rgba(196,162,101,${this.alpha})`;
       ctx.lineWidth = 0.8;
       ctx.stroke();
     }
@@ -98,9 +98,9 @@
 
     // Background gradient
     const grad = ctx.createRadialGradient(W * 0.5, H * 0.4, 0, W * 0.5, H * 0.4, W * 0.7);
-    grad.addColorStop(0,   'rgba(22,18,35,0.98)');
-    grad.addColorStop(0.5, 'rgba(10,10,15,0.99)');
-    grad.addColorStop(1,   'rgba(5,5,8,1)');
+    grad.addColorStop(0,   'rgba(26,22,18,0.97)');
+    grad.addColorStop(0.5, 'rgba(15,13,11,0.98)');
+    grad.addColorStop(1,   'rgba(10,8,6,1)');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, W, H);
 
@@ -121,7 +121,7 @@
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(200,169,110,${(1 - d / 100) * 0.06})`;
+          ctx.strokeStyle = `rgba(196,162,101,${(1 - d / 100) * 0.05})`;
           ctx.lineWidth = 0.5;
           ctx.stroke();
         }

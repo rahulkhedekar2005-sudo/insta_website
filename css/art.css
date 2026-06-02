@@ -1,8 +1,8 @@
 /* ══════════════════════════════════════════════
-   ART.CSS — Gallery Grid, Lightbox, Watermark
+   ART.CSS — Vintage Gallery Grid, Frames, Lightbox
 ══════════════════════════════════════════════ */
 
-/* ── Filter Controls ─────────────────────── */
+/* ── Filter Controls (kept for CSS completeness) ── */
 .art-controls {
   display: flex;
   gap: 10px;
@@ -16,10 +16,10 @@
   border: 1px solid var(--border2);
   background: transparent;
   color: var(--text2);
-  border-radius: 100px;
+  border-radius: 0;
   font-family: var(--font-body);
-  font-size: 12px;
-  letter-spacing: 0.12em;
+  font-size: 11px;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   cursor: pointer;
   transition: var(--transition);
@@ -36,26 +36,49 @@
 .art-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
+  gap: 32px;
   max-width: 1400px;
   margin: 0 auto;
 }
 
+/* ── Art Item — Classical Frame ─────────── */
 .art-item {
   position: relative;
-  border-radius: var(--radius);
   overflow: hidden;
   background: var(--surface);
-  border: 1px solid var(--border);
   cursor: pointer;
   transition: var(--transition);
   aspect-ratio: 4/3;
+  /* Classical picture frame effect */
+  border: 3px solid rgba(196,162,101,0.25);
+  box-shadow:
+    inset 0 0 0 1px rgba(196,162,101,0.08),
+    0 8px 32px rgba(0,0,0,0.5);
+  border-radius: 2px;
+}
+
+/* Inner frame line */
+.art-item::before {
+  content: '';
+  position: absolute;
+  top: 6px; left: 6px; right: 6px; bottom: 6px;
+  border: 1px solid rgba(196,162,101,0.12);
+  z-index: 6;
+  pointer-events: none;
+  transition: border-color var(--transition);
 }
 
 .art-item:hover {
   transform: translateY(-6px);
-  border-color: rgba(200,169,110,0.4);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  border-color: rgba(196,162,101,0.5);
+  box-shadow:
+    inset 0 0 0 1px rgba(196,162,101,0.15),
+    0 24px 64px rgba(0,0,0,0.6),
+    0 0 40px rgba(196,162,101,0.08);
+}
+
+.art-item:hover::before {
+  border-color: rgba(196,162,101,0.2);
 }
 
 .art-item img {
@@ -63,7 +86,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.6s ease;
+  transition: transform 0.7s ease;
   /* Prevent right-click saving */
   pointer-events: none;
   -webkit-user-drag: none;
@@ -72,7 +95,7 @@
 }
 
 .art-item:hover img {
-  transform: scale(1.06);
+  transform: scale(1.04);
 }
 
 /* ── Watermark ─────────────────────────── */
@@ -94,14 +117,13 @@
   font-size: clamp(14px, 3vw, 22px);
   font-weight: 300;
   letter-spacing: 0.25em;
-  color: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.15);
   text-shadow: 0 1px 3px rgba(0,0,0,0.5);
   white-space: nowrap;
   transform: rotate(-30deg);
-  /* Tiled watermark via background workaround */
 }
 
-/* Tiled watermark using pseudo elements */
+/* Tiled watermark */
 .art-watermark-tiled {
   position: absolute;
   inset: 0;
@@ -115,10 +137,10 @@
 .art-watermark-tiled span {
   position: absolute;
   font-family: var(--font-serif);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 300;
   letter-spacing: 0.2em;
-  color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.12);
   transform: rotate(-30deg);
   white-space: nowrap;
   text-shadow: 0 1px 3px rgba(0,0,0,0.4);
@@ -128,10 +150,10 @@
 .art-overlay {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  padding: 32px 20px 20px;
-  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+  padding: 40px 24px 20px;
+  background: linear-gradient(to top, rgba(15,13,11,0.92) 0%, rgba(15,13,11,0.4) 60%, transparent 100%);
   transform: translateY(100%);
-  transition: transform 0.4s ease;
+  transition: transform 0.5s ease;
   z-index: 10;
 }
 
@@ -140,27 +162,30 @@
 }
 
 .art-overlay h4 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 18px;
   font-weight: 400;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 4px;
+  letter-spacing: 0.02em;
 }
 
 .art-overlay p {
-  font-size: 12px;
-  color: rgba(255,255,255,0.65);
+  font-family: var(--font-serif);
+  font-size: 13px;
+  color: rgba(237,230,219,0.6);
   font-weight: 300;
+  font-style: italic;
 }
 
 .art-overlay .art-tag {
   display: inline-block;
   margin-top: 8px;
   padding: 3px 10px;
-  border: 1px solid rgba(200,169,110,0.5);
-  border-radius: 100px;
-  font-size: 10px;
-  letter-spacing: 0.15em;
+  border: 1px solid rgba(196,162,101,0.4);
+  border-radius: 0;
+  font-size: 9px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--accent2);
 }
@@ -175,10 +200,12 @@
   justify-content: center;
   padding: 80px 20px;
   text-align: center;
-  border: 2px dashed var(--border2);
-  border-radius: var(--radius);
+  border: 1px dashed var(--border2);
+  border-radius: 2px;
   color: var(--text2);
-  font-size: 15px;
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-style: italic;
   line-height: 2;
 }
 
@@ -187,13 +214,13 @@
   position: fixed;
   inset: 0;
   z-index: 950;
-  background: rgba(5, 5, 10, 0.96);
-  backdrop-filter: blur(16px);
+  background: rgba(10, 8, 6, 0.97);
+  backdrop-filter: blur(20px);
   display: none;
   align-items: center;
   justify-content: center;
   padding: 40px;
-  animation: lb-in 0.3s ease;
+  animation: lb-in 0.4s ease;
 }
 
 .art-lightbox.open {
@@ -207,21 +234,22 @@
 
 .lb-close {
   position: absolute;
-  top: 20px; right: 24px;
-  background: var(--surface);
+  top: 24px; right: 28px;
+  background: transparent;
   border: 1px solid var(--border2);
-  color: var(--text);
-  width: 44px; height: 44px;
-  border-radius: 50%;
-  font-size: 18px;
+  color: var(--text2);
+  width: 42px; height: 42px;
+  border-radius: 0;
+  font-size: 16px;
   cursor: pointer;
   transition: var(--transition);
   z-index: 10;
 }
 
 .lb-close:hover {
-  background: var(--red);
-  border-color: var(--red);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
 }
 
 .lb-prev,
@@ -229,12 +257,12 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: var(--surface);
+  background: transparent;
   border: 1px solid var(--border2);
-  color: var(--text);
-  width: 52px; height: 52px;
-  border-radius: 50%;
-  font-size: 28px;
+  color: var(--text2);
+  width: 48px; height: 48px;
+  border-radius: 0;
+  font-size: 26px;
   cursor: pointer;
   transition: var(--transition);
   display: flex;
@@ -242,8 +270,8 @@
   justify-content: center;
 }
 
-.lb-prev { left: 16px; }
-.lb-next { right: 16px; }
+.lb-prev { left: 20px; }
+.lb-next { right: 20px; }
 
 .lb-prev:hover,
 .lb-next:hover {
@@ -254,7 +282,7 @@
 
 .lb-content {
   display: flex;
-  gap: 40px;
+  gap: 48px;
   align-items: center;
   max-width: 1100px;
   width: 100%;
@@ -263,10 +291,21 @@
 .lb-image-wrap {
   flex: 1;
   position: relative;
-  border-radius: var(--radius);
   overflow: hidden;
   max-height: 70vh;
-  box-shadow: var(--shadow2);
+  border: 3px solid rgba(196,162,101,0.2);
+  box-shadow:
+    inset 0 0 0 1px rgba(196,162,101,0.06),
+    0 24px 80px rgba(0,0,0,0.8);
+}
+
+.lb-image-wrap::before {
+  content: '';
+  position: absolute;
+  top: 8px; left: 8px; right: 8px; bottom: 8px;
+  border: 1px solid rgba(196,162,101,0.1);
+  z-index: 2;
+  pointer-events: none;
 }
 
 .lb-image-wrap img {
@@ -291,7 +330,7 @@
   font-size: clamp(20px, 4vw, 36px);
   font-weight: 300;
   letter-spacing: 0.3em;
-  color: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.10);
   transform: rotate(-30deg);
   pointer-events: none;
   user-select: none;
@@ -305,35 +344,38 @@
 }
 
 .lb-info h3 {
-  font-family: var(--font-serif);
-  font-size: 32px;
-  font-weight: 300;
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 400;
   color: var(--text);
-  margin-bottom: 12px;
-  line-height: 1.2;
+  margin-bottom: 16px;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
 }
 
 .lb-info p {
-  font-size: 14px;
+  font-family: var(--font-serif);
+  font-size: 15px;
   color: var(--text2);
   font-weight: 300;
-  line-height: 1.7;
+  font-style: italic;
+  line-height: 1.8;
   margin-bottom: 20px;
 }
 
 .lb-tag {
   display: inline-block;
   padding: 5px 14px;
-  border: 1px solid rgba(200,169,110,0.35);
-  border-radius: 100px;
-  font-size: 11px;
-  letter-spacing: 0.18em;
+  border: 1px solid rgba(196,162,101,0.3);
+  border-radius: 0;
+  font-size: 10px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--accent2);
 }
 
 @media (max-width: 768px) {
-  .art-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+  .art-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
   .lb-content { flex-direction: column; }
   .lb-info { width: 100%; }
   .lb-prev { left: 4px; }

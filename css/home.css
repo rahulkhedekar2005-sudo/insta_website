@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════
-   HOME.CSS — Hero, Float Cards, Scroll Hint
+   HOME.CSS — Vintage Hero, Float Cards, Scroll
 ══════════════════════════════════════════════ */
 
 #home {
@@ -26,27 +26,31 @@
 
 .hero-tag {
   display: inline-block;
-  font-size: 11px;
-  letter-spacing: 0.35em;
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.4em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 28px;
+  margin-bottom: 32px;
   opacity: 0;
   animation: fade-up 0.8s 0.2s forwards;
+  border-bottom: 1px solid rgba(196,162,101,0.3);
+  padding-bottom: 6px;
 }
 
 .hero-title {
-  font-family: var(--font-serif);
-  font-weight: 300;
+  font-family: var(--font-display);
+  font-weight: 400;
   line-height: 1.0;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
 }
 
 .hero-title .line {
   display: block;
-  font-size: clamp(4rem, 9vw, 8rem);
+  font-size: clamp(4rem, 9vw, 7.5rem);
   opacity: 0;
   transform: translateY(40px);
+  letter-spacing: 0.01em;
 }
 
 .hero-title .line-1 { animation: fade-up 0.9s 0.4s forwards; }
@@ -58,19 +62,21 @@
 .hero-title .line-3 { animation: fade-up 0.9s 0.7s forwards; }
 
 .hero-sub {
-  font-size: 17px;
+  font-family: var(--font-serif);
+  font-size: 19px;
   font-weight: 300;
+  font-style: italic;
   color: var(--text2);
-  line-height: 1.75;
-  max-width: 520px;
-  margin-bottom: 44px;
+  line-height: 1.8;
+  max-width: 480px;
+  margin-bottom: 48px;
   opacity: 0;
   animation: fade-up 0.9s 0.9s forwards;
 }
 
 .hero-ctas {
   display: flex;
-  gap: 16px;
+  gap: 18px;
   flex-wrap: wrap;
   opacity: 0;
   animation: fade-up 0.9s 1.05s forwards;
@@ -79,40 +85,43 @@
 .cta-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 14px 30px;
-  border-radius: 100px;
+  gap: 10px;
+  padding: 16px 36px;
+  border-radius: 2px;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   cursor: pointer;
   transition: var(--transition);
-  border: 1.5px solid transparent;
+  border: 1px solid transparent;
+  position: relative;
 }
 
 .cta-art {
   background: var(--accent);
   color: var(--bg);
-  box-shadow: 0 0 24px var(--glow);
+  border-color: var(--accent);
+  box-shadow: 0 4px 20px var(--glow);
 }
 
 .cta-art:hover {
   background: var(--accent3);
+  border-color: var(--accent3);
   transform: translateY(-2px);
-  box-shadow: 0 0 40px var(--glow);
+  box-shadow: 0 8px 32px var(--glow);
 }
 
 .cta-books {
   background: transparent;
   color: var(--accent2);
-  border-color: rgba(200,169,110,0.35);
+  border-color: rgba(196,162,101,0.35);
 }
 
 .cta-books:hover {
-  background: rgba(200,169,110,0.1);
-  border-color: var(--accent2);
+  background: rgba(196,162,101,0.08);
+  border-color: var(--accent);
   transform: translateY(-2px);
 }
 
@@ -124,41 +133,56 @@
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
   z-index: 2;
   opacity: 0;
   animation: fade-left 1s 1.2s forwards;
 }
 
 .float-card {
-  width: 240px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px 24px;
+  width: 250px;
+  background: rgba(42,35,28,0.65);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 30px 26px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
   transition: var(--transition);
-  animation: float-bob 6s ease-in-out infinite;
+  animation: float-bob 7s ease-in-out infinite;
+  backdrop-filter: blur(12px);
+}
+
+.float-card::before {
+  content: '';
+  position: absolute;
+  top: 8px; left: 8px; right: 8px; bottom: 8px;
+  border: 1px solid rgba(196,162,101,0.06);
+  border-radius: 3px;
+  pointer-events: none;
+  transition: border-color var(--transition);
 }
 
 .float-card:nth-child(2) {
-  animation-delay: 1s;
+  animation-delay: 1.2s;
 }
 
 .float-card:hover {
-  transform: translateY(-6px) scale(1.02);
+  transform: translateY(-6px) scale(1.01);
   border-color: var(--accent);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(200,169,110,0.2);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(196,162,101,0.15);
+}
+
+.float-card:hover::before {
+  border-color: rgba(196,162,101,0.15);
 }
 
 .card-shimmer {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%);
+  background: linear-gradient(135deg, transparent 0%, rgba(196,162,101,0.04) 50%, transparent 100%);
   transform: translateX(-100%);
-  transition: transform 0.6s ease;
+  transition: transform 0.8s ease;
 }
 
 .float-card:hover .card-shimmer {
@@ -170,33 +194,37 @@
 .card-icon {
   font-size: 28px;
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .card-inner h3 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 20px;
   font-weight: 400;
   color: var(--text);
   margin-bottom: 8px;
+  letter-spacing: 0.02em;
 }
 
 .card-inner p {
-  font-size: 13px;
+  font-family: var(--font-serif);
+  font-size: 14px;
   color: var(--text2);
   font-weight: 300;
-  line-height: 1.5;
-  margin-bottom: 16px;
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 18px;
 }
 
 .card-arrow {
   font-size: 18px;
   color: var(--accent);
   transition: transform var(--transition);
+  display: inline-block;
 }
 
 .float-card:hover .card-arrow {
-  transform: translateX(6px);
+  transform: translateX(8px);
 }
 
 /* ── Scroll Hint ─────────────────────────── */
@@ -208,28 +236,30 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   opacity: 0;
   animation: fade-in 1s 1.8s forwards;
 }
 
 .scroll-hint span {
-  font-size: 10px;
-  letter-spacing: 0.25em;
+  font-family: var(--font-body);
+  font-size: 9px;
+  letter-spacing: 0.35em;
   text-transform: uppercase;
   color: var(--text3);
 }
 
 .scroll-line {
   width: 1px;
-  height: 40px;
-  background: linear-gradient(to bottom, var(--text3), transparent);
-  animation: scroll-pulse 2s ease-in-out infinite;
+  height: 44px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scroll-pulse 2.5s ease-in-out infinite;
+  opacity: 0.5;
 }
 
 @keyframes scroll-pulse {
-  0%, 100% { opacity: 1; transform: scaleY(1); }
-  50% { opacity: 0.3; transform: scaleY(0.5); }
+  0%, 100% { opacity: 0.5; transform: scaleY(1); }
+  50% { opacity: 0.15; transform: scaleY(0.5); }
 }
 
 /* ── Keyframes ───────────────────────────── */
@@ -248,7 +278,7 @@
 
 @keyframes float-bob {
   0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-10px); }
+  50%       { transform: translateY(-8px); }
 }
 
 /* ── Responsive ──────────────────────────── */

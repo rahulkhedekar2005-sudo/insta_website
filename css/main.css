@@ -1,33 +1,40 @@
 /* ══════════════════════════════════════════════
-   MAIN.CSS — Variables, Reset, Nav, Global
+   MAIN.CSS — Vintage Art Design System
 ══════════════════════════════════════════════ */
 
 :root {
-  --bg:         #0a0a0f;
-  --bg2:        #11111a;
-  --bg3:        #181825;
-  --surface:    #1e1e2e;
-  --surface2:   #252540;
-  --border:     rgba(255,255,255,0.08);
-  --border2:    rgba(255,255,255,0.15);
-  --text:       #e8e8f0;
-  --text2:      #9999bb;
-  --text3:      #666688;
-  --accent:     #c8a96e;
-  --accent2:    #e2c78a;
+  /* ── Warm vintage palette ────────────────── */
+  --bg:         #0f0d0b;
+  --bg2:        #1a1612;
+  --bg3:        #241f19;
+  --surface:    #2a231c;
+  --surface2:   #352d24;
+  --border:     rgba(196,162,101,0.10);
+  --border2:    rgba(196,162,101,0.20);
+  --text:       #ede6db;
+  --text2:      #b0a48e;
+  --text3:      #7a6f5f;
+  --accent:     #c4a265;
+  --accent2:    #ddbf7e;
   --accent3:    #f0dca8;
-  --glow:       rgba(200,169,110,0.25);
-  --glow2:      rgba(200,169,110,0.1);
-  --red:        #e87070;
-  --teal:       #70c0b8;
-  --radius:     16px;
-  --radius-sm:  8px;
-  --shadow:     0 8px 32px rgba(0,0,0,0.5);
-  --shadow2:    0 24px 64px rgba(0,0,0,0.7);
-  --font-display: 'Bebas Neue', sans-serif;
+  --glow:       rgba(196,162,101,0.20);
+  --glow2:      rgba(196,162,101,0.08);
+  --red:        #c87058;
+  --teal:       #8ab0a0;
+
+  /* ── Radius & Shadows ───────────────────── */
+  --radius:     8px;
+  --radius-sm:  4px;
+  --shadow:     0 8px 32px rgba(0,0,0,0.6);
+  --shadow2:    0 24px 64px rgba(0,0,0,0.8);
+
+  /* ── Typography ─────────────────────────── */
+  --font-display: 'Playfair Display', Georgia, serif;
   --font-serif:   'Cormorant Garamond', Georgia, serif;
-  --font-body:    'Raleway', sans-serif;
-  --transition:   0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --font-body:    'Raleway', 'Helvetica Neue', sans-serif;
+
+  /* ── Motion ─────────────────────────────── */
+  --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,9 +48,24 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   cursor: default;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body.pdf-open { overflow: hidden; }
+
+/* ── Grain Overlay ────────────────────────── */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 800;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+  mix-blend-mode: overlay;
+}
 
 #bg-canvas {
   position: fixed;
@@ -52,10 +74,16 @@ body.pdf-open { overflow: hidden; }
   pointer-events: none;
 }
 
-/* ── Scrollbar ─────────────────────────────── */
-::-webkit-scrollbar { width: 6px; }
+/* ── Scrollbar ────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: var(--bg2); }
-::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent2);
+}
 
 /* ══════════════════ NAV ═══════════════════ */
 #navbar {
@@ -65,30 +93,40 @@ body.pdf-open { overflow: hidden; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 48px;
-  background: rgba(10,10,15,0.6);
-  backdrop-filter: blur(24px);
+  padding: 22px 48px;
+  background: rgba(15,13,11,0.7);
+  backdrop-filter: blur(20px) saturate(1.2);
   border-bottom: 1px solid var(--border);
   transition: var(--transition);
 }
 
+#navbar::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 48px; right: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.3;
+}
+
 #navbar.scrolled {
   padding: 14px 48px;
-  background: rgba(10,10,15,0.9);
+  background: rgba(15,13,11,0.92);
 }
 
 .nav-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
   cursor: pointer;
 }
 
 .logo-symbol {
-  font-size: 20px;
+  font-size: 18px;
   color: var(--accent);
-  animation: spin-slow 8s linear infinite;
+  animation: spin-slow 12s linear infinite;
+  filter: drop-shadow(0 0 6px var(--glow));
 }
 
 @keyframes spin-slow {
@@ -97,38 +135,39 @@ body.pdf-open { overflow: hidden; }
 }
 
 .logo-text {
-  font-family: var(--font-serif);
-  font-size: 16px;
-  font-weight: 300;
-  letter-spacing: 0.12em;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
   color: var(--accent2);
 }
 
 .nav-links {
   display: flex;
-  gap: 36px;
+  gap: 40px;
 }
 
 .nav-link {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 400;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--text2);
   text-decoration: none;
   position: relative;
-  padding-bottom: 4px;
+  padding-bottom: 6px;
   transition: color var(--transition);
 }
 
 .nav-link::after {
   content: '';
   position: absolute;
-  bottom: 0; left: 0;
+  bottom: 0; left: 50%;
   width: 0; height: 1px;
   background: var(--accent);
-  transition: width var(--transition);
+  transition: all var(--transition);
+  transform: translateX(-50%);
 }
 
 .nav-link:hover,
@@ -152,7 +191,7 @@ body.pdf-open { overflow: hidden; }
 .nav-toggle span {
   display: block;
   width: 22px; height: 1.5px;
-  background: var(--text2);
+  background: var(--accent2);
   transition: var(--transition);
 }
 
@@ -169,6 +208,35 @@ body.pdf-open { overflow: hidden; }
   display: block;
 }
 
+/* ── Section Ornament (decorative divider) ── */
+.section-ornament {
+  text-align: center;
+  margin-bottom: 48px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+.section-ornament::before,
+.section-ornament::after {
+  content: '';
+  flex: 1;
+  max-width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.35;
+}
+
+.section-ornament span {
+  color: var(--accent);
+  font-size: 16px;
+  padding: 0 20px;
+  opacity: 0.5;
+  filter: drop-shadow(0 0 4px var(--glow));
+}
+
 /* ══════════════════ SECTION HEADERS ═══════════════════ */
 .section-header {
   text-align: center;
@@ -177,24 +245,27 @@ body.pdf-open { overflow: hidden; }
 
 .section-tag {
   display: inline-block;
-  font-size: 11px;
-  letter-spacing: 0.3em;
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.35em;
   text-transform: uppercase;
   color: var(--accent);
-  background: rgba(200,169,110,0.1);
-  border: 1px solid rgba(200,169,110,0.25);
-  padding: 6px 16px;
-  border-radius: 100px;
-  margin-bottom: 20px;
+  background: transparent;
+  border-top: 1px solid rgba(196,162,101,0.25);
+  border-bottom: 1px solid rgba(196,162,101,0.25);
+  padding: 8px 24px;
+  border-radius: 0;
+  margin-bottom: 24px;
 }
 
 .section-title {
-  font-family: var(--font-serif);
-  font-size: clamp(3rem, 6vw, 5.5rem);
-  font-weight: 300;
-  line-height: 1.05;
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 5.5vw, 5rem);
+  font-weight: 400;
+  line-height: 1.1;
   color: var(--text);
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  letter-spacing: 0.01em;
 }
 
 .section-title em {
@@ -203,22 +274,24 @@ body.pdf-open { overflow: hidden; }
 }
 
 .section-desc {
-  font-size: 15px;
+  font-family: var(--font-serif);
+  font-size: 18px;
   color: var(--text2);
   font-weight: 300;
-  max-width: 540px;
+  font-style: italic;
+  max-width: 500px;
   margin: 0 auto;
-  line-height: 1.7;
+  line-height: 1.8;
 }
 
 /* ══════════════════ UTILITY ═══════════════════ */
 .placeholder-icon { font-size: 48px; margin-bottom: 16px; }
 
 code {
-  font-family: monospace;
+  font-family: 'Courier New', monospace;
   background: var(--surface2);
   padding: 2px 8px;
-  border-radius: 4px;
+  border-radius: 3px;
   font-size: 12px;
   color: var(--accent);
 }
@@ -227,6 +300,7 @@ code {
 @media (max-width: 768px) {
   #navbar { padding: 16px 20px; }
   #navbar.scrolled { padding: 12px 20px; }
+  #navbar::after { left: 20px; right: 20px; }
 
   .nav-links {
     position: fixed;
@@ -245,7 +319,7 @@ code {
 
   .nav-link {
     padding: 16px 0;
-    font-size: 14px;
+    font-size: 12px;
     border-bottom: 1px solid var(--border);
   }
 

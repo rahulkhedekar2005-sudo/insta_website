@@ -1,12 +1,12 @@
 /* ══════════════════════════════════════════════
-   BOOKS.CSS — Book Grid, PDF Reader, Toolbar
+   BOOKS.CSS — Vintage Book Grid, PDF Reader
 ══════════════════════════════════════════════ */
 
 /* ── Books Grid ──────────────────────────── */
 .books-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 32px;
+  gap: 36px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -28,27 +28,48 @@
   position: relative;
   width: 100%;
   aspect-ratio: 2/3;
-  border-radius: 6px 12px 12px 6px;
+  border-radius: 2px 6px 6px 2px;
   overflow: hidden;
-  box-shadow: -4px 4px 16px rgba(0,0,0,0.5), 4px 8px 24px rgba(0,0,0,0.4);
+  box-shadow:
+    -4px 4px 16px rgba(0,0,0,0.6),
+    4px 8px 24px rgba(0,0,0,0.5);
   background: var(--surface);
-  border: 1px solid var(--border);
-  transition: box-shadow var(--transition);
-  /* Book spine effect */
+  border: 1px solid rgba(196,162,101,0.12);
+  transition: box-shadow var(--transition), border-color var(--transition);
 }
 
+/* Book spine effect */
 .book-cover-wrap::before {
   content: '';
   position: absolute;
   left: 0; top: 0; bottom: 0;
-  width: 10px;
-  background: linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0.1), transparent);
+  width: 12px;
+  background: linear-gradient(
+    to right,
+    rgba(0,0,0,0.5),
+    rgba(0,0,0,0.2),
+    rgba(196,162,101,0.05),
+    transparent
+  );
   z-index: 5;
-  border-radius: 6px 0 0 6px;
+  border-radius: 2px 0 0 2px;
+}
+
+/* Vintage paper top edge */
+.book-cover-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 10%, rgba(196,162,101,0.15) 30%, rgba(196,162,101,0.15) 70%, transparent 90%);
+  z-index: 5;
 }
 
 .book-card-item:hover .book-cover-wrap {
-  box-shadow: -6px 6px 24px rgba(0,0,0,0.6), 8px 16px 40px rgba(0,0,0,0.5);
+  box-shadow:
+    -6px 6px 24px rgba(0,0,0,0.7),
+    8px 16px 48px rgba(0,0,0,0.6);
+  border-color: rgba(196,162,101,0.25);
 }
 
 .book-cover-img {
@@ -67,7 +88,7 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: linear-gradient(135deg, var(--surface2), var(--bg3));
+  background: linear-gradient(160deg, var(--surface), var(--bg3));
   text-align: center;
   gap: 12px;
 }
@@ -77,7 +98,7 @@
 }
 
 .book-cover-default .book-title-default {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 15px;
   font-weight: 400;
   color: var(--text);
@@ -85,6 +106,7 @@
 }
 
 .book-cover-default .book-author-default {
+  font-family: var(--font-serif);
   font-size: 12px;
   color: var(--accent2);
   font-style: italic;
@@ -94,7 +116,7 @@
 .book-open-badge {
   position: absolute;
   inset: 0;
-  background: rgba(200,169,110,0.18);
+  background: rgba(15,13,11,0.45);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -110,32 +132,36 @@
 .book-open-badge span {
   background: var(--accent);
   color: var(--bg);
-  padding: 10px 22px;
-  border-radius: 100px;
-  font-size: 12px;
+  padding: 10px 24px;
+  border-radius: 0;
+  font-family: var(--font-body);
+  font-size: 10px;
   font-weight: 500;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
+  border: 1px solid var(--accent2);
 }
 
 /* ── Book meta below cover ───────────────── */
 .book-meta {
-  margin-top: 16px;
+  margin-top: 18px;
   text-align: center;
   width: 100%;
 }
 
 .book-meta h4 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 16px;
   font-weight: 400;
   color: var(--text);
   margin-bottom: 4px;
   line-height: 1.3;
+  letter-spacing: 0.02em;
 }
 
 .book-meta .book-author {
-  font-size: 12px;
+  font-family: var(--font-serif);
+  font-size: 13px;
   color: var(--text2);
   font-style: italic;
   margin-bottom: 6px;
@@ -144,10 +170,12 @@
 .book-meta .book-genre {
   display: inline-block;
   padding: 3px 10px;
-  border: 1px solid var(--border2);
-  border-radius: 100px;
-  font-size: 10px;
-  letter-spacing: 0.12em;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  font-family: var(--font-body);
+  font-size: 9px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text3);
 }
@@ -167,7 +195,7 @@
 }
 
 .pdf-modal.dark-mode {
-  --pdf-bg: #111;
+  --pdf-bg: #0a0908;
 }
 
 .pdf-modal-inner {
@@ -189,6 +217,16 @@
   gap: 12px;
   flex-wrap: wrap;
   z-index: 10;
+  position: relative;
+}
+
+.pdf-toolbar::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 20px; right: 20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.2;
 }
 
 .pdf-toolbar-left,
@@ -200,14 +238,15 @@
 }
 
 .pdf-title {
-  font-family: var(--font-serif);
-  font-size: 18px;
+  font-family: var(--font-display);
+  font-size: 17px;
   font-weight: 400;
   color: var(--text);
   max-width: 220px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  letter-spacing: 0.02em;
 }
 
 .pdf-btn {
@@ -216,19 +255,20 @@
   justify-content: center;
   gap: 6px;
   padding: 8px 12px;
-  background: var(--surface);
+  background: transparent;
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: 2px;
   color: var(--text2);
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 12px;
   cursor: pointer;
   transition: var(--transition);
   white-space: nowrap;
+  letter-spacing: 0.05em;
 }
 
 .pdf-btn svg {
-  width: 16px; height: 16px;
+  width: 15px; height: 15px;
   stroke: currentColor;
   fill: none;
   stroke-width: 2;
@@ -238,13 +278,13 @@
 }
 
 .pdf-btn:hover {
-  background: var(--surface2);
+  background: var(--surface);
   border-color: var(--border2);
   color: var(--text);
 }
 
 .pdf-btn.active {
-  background: rgba(200,169,110,0.15);
+  background: rgba(196,162,101,0.12);
   border-color: var(--accent);
   color: var(--accent2);
 }
@@ -253,19 +293,21 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 14px;
+  font-family: var(--font-body);
+  font-size: 13px;
   color: var(--text2);
+  letter-spacing: 0.05em;
 }
 
 #currentPageInput {
   width: 52px;
   padding: 6px 8px;
-  background: var(--surface2);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: 2px;
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 13px;
   text-align: center;
 }
 
@@ -275,10 +317,12 @@
 }
 
 .zoom-level {
-  font-size: 13px;
+  font-family: var(--font-body);
+  font-size: 12px;
   color: var(--text2);
   min-width: 44px;
   text-align: center;
+  letter-spacing: 0.05em;
 }
 
 /* ── Bookmarks Panel ─────────────────────── */
@@ -288,7 +332,7 @@
   width: 260px;
   background: var(--bg2);
   border-left: 1px solid var(--border);
-  padding: 20px;
+  padding: 24px;
   transform: translateX(100%);
   transition: transform var(--transition);
   z-index: 20;
@@ -300,11 +344,12 @@
 }
 
 .bookmarks-panel h4 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 18px;
   font-weight: 400;
   color: var(--text);
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  letter-spacing: 0.02em;
 }
 
 #bookmarkList {
@@ -321,11 +366,13 @@
   padding: 10px 14px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 14px;
+  border-radius: 2px;
+  font-family: var(--font-body);
+  font-size: 13px;
   color: var(--text2);
   cursor: pointer;
   transition: var(--transition);
+  letter-spacing: 0.04em;
 }
 
 #bookmarkList li:hover {
@@ -338,21 +385,23 @@
   font-size: 12px;
   cursor: pointer;
   padding: 2px 6px;
-  border-radius: 4px;
+  border-radius: 2px;
   transition: var(--transition);
 }
 
 #bookmarkList li .bm-del:hover {
   color: var(--red);
-  background: rgba(232,112,112,0.1);
+  background: rgba(200,112,88,0.1);
 }
 
 .bm-empty {
-  font-size: 13px;
+  font-family: var(--font-serif);
+  font-size: 14px;
   color: var(--text3);
   text-align: center;
-  line-height: 1.6;
+  line-height: 1.7;
   margin-top: 8px;
+  font-style: italic;
 }
 
 /* ── PDF Viewer ─────────────────────────── */
@@ -368,15 +417,16 @@
 }
 
 .pdf-modal.dark-mode .pdf-viewer-area {
-  background: #0d0d0d;
+  background: #0a0908;
 }
 
 .pdf-canvas-wrap {
   position: relative;
   display: inline-block;
-  box-shadow: var(--shadow2);
-  border-radius: 4px;
+  box-shadow: 0 16px 64px rgba(0,0,0,0.7);
+  border-radius: 2px;
   overflow: hidden;
+  border: 1px solid rgba(196,162,101,0.08);
 }
 
 #pdfCanvas {
@@ -402,9 +452,9 @@
 
 .highlight-rect {
   position: absolute;
-  background: rgba(255, 214, 0, 0.3);
-  border: 1px solid rgba(255, 214, 0, 0.6);
-  border-radius: 2px;
+  background: rgba(196, 162, 101, 0.25);
+  border: 1px solid rgba(196, 162, 101, 0.5);
+  border-radius: 1px;
   pointer-events: none;
 }
 
@@ -424,11 +474,11 @@
 .pdf-loading.hidden { display: none; }
 
 .loader-ring {
-  width: 44px; height: 44px;
-  border: 3px solid var(--border);
+  width: 40px; height: 40px;
+  border: 2px solid var(--border);
   border-top-color: var(--accent);
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
@@ -436,9 +486,10 @@
 }
 
 .pdf-loading span {
-  font-size: 13px;
-  letter-spacing: 0.15em;
-  color: var(--text2);
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--text3);
   text-transform: uppercase;
 }
 
@@ -451,7 +502,7 @@
     gap: 8px;
   }
 
-  .pdf-title { max-width: 120px; font-size: 15px; }
+  .pdf-title { max-width: 120px; font-size: 14px; }
 
   .pdf-toolbar-center { order: 3; width: 100%; justify-content: center; }
 
@@ -471,23 +522,24 @@
 
 .pdf-scroll-page-wrap {
   position: relative;
-  box-shadow: var(--shadow2);
-  border-radius: 4px;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.6);
+  border-radius: 2px;
   background: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
   transition: transform var(--transition);
+  border: 1px solid rgba(196,162,101,0.06);
 }
 
 .pdf-scroll-page-wrap canvas {
   display: block;
   max-width: 100%;
-  border-radius: 4px;
+  border-radius: 2px;
 }
 
 .pdf-modal.dark-mode .pdf-scroll-page-wrap {
-  background: #1e1e1e;
+  background: #1a1612;
   box-shadow: 0 16px 48px rgba(0,0,0,0.8);
 }
 
@@ -497,12 +549,13 @@
 
 .pdf-page-number-label {
   position: absolute;
-  bottom: -22px;
+  bottom: -24px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 11px;
-  letter-spacing: 0.1em;
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.15em;
   color: var(--text3);
   pointer-events: none;
   text-transform: uppercase;
-}
+}
