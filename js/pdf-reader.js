@@ -16,6 +16,8 @@ let darkMode     = false;
 let scrollMode   = false;
 let scrollPagesRendered = {}; // { pageNum: zoomLevel }
 let scrollObserver = null;
+let currentRenderTask = null; // Active render task in single page view
+let scrollRenderTasks = {};   // Active render tasks in scroll view
 
 // ── DOM refs ─────────────────────────────────
 const modal        = document.getElementById('pdfModal');
@@ -112,25 +114,54 @@ async function renderPage(num) {
   loadingEl.classList.remove('hidden');
   clearHighlights();
 
-  const page     = await pdfDoc.getPage(num);
-  const viewport = page.getViewport({ scale: zoomLevel * 1.5 });
+  // Cancel any running task
+  if (currentRenderTask) {
+    currentRenderTask.cancel();
+    currentRenderTask = null;
+  }
 
-  canvas.width  = viewport.width;
-  canvas.height = viewport.height;
-  hlLayer.style.width  = viewport.width  + 'px';
-  hlLayer.style.height = viewport.height + 'px';
+  try {
+    const page = await pdfDoc.getPage(num);
+    const viewport = page.getViewport({ scale: zoomLevel * 1.5 });
+    const dpr = window.devicePixelRatio || 1;
 
-  await page.render({ canvasContext: ctx, viewport }).promise;
+    canvas.width  = viewport.width * dpr;
+    canvas.height = viewport.height * dpr;
+    canvas.style.width  = viewport.width  + 'px';
+    canvas.style.height = viewport.height + 'px';
+    hlLayer.style.width  = viewport.width  + 'px';
+    hlLayer.style.height = viewport.height + 'px';
 
-  loadingEl.classList.add('hidden');
-  currentPage = num;
-  document.getElementById('currentPageInput').value = num;
+    const transform = dpr !== 1 
+      ? [dpr, 0, 0, dpr, 0, 0] 
+      : null;
 
-  // Scroll to top of viewer
-  viewerArea.scrollTo({ top: 0, behavior: 'smooth' });
+    const renderContext = {
+      canvasContext: ctx,
+      viewport: viewport,
+      transform: transform
+    };
 
-  // Re-draw any bookmarked page indicator
-  updateBookmarkIcon();
+    currentRenderTask = page.render(renderContext);
+    await currentRenderTask.promise;
+    currentRenderTask = null;
+
+    loadingEl.classList.add('hidden');
+    currentPage = num;
+    document.getElementById('currentPageInput').value = num;
+
+    // Scroll to top of viewer
+    viewerArea.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Re-draw any bookmarked page indicator
+    updateBookmarkIcon();
+  } catch (err) {
+    if (err.name === 'RenderingCancelledException') {
+      return; // Expected cancellation
+    }
+    loadingEl.innerHTML = `<p style="color:var(--red)">Could not load PDF.<br>${err.message}</p>`;
+    console.error(err);
+  }
 }
 
 // ══════════════════ PAGE CONTROLS ══════════════
@@ -300,10 +331,21 @@ function closeReader() {
   document.body.classList.remove('pdf-open');
   pdfDoc = null;
   
+  if (currentRenderTask) {
+    currentRenderTask.cancel();
+    currentRenderTask = null;
+  }
+
   if (scrollObserver) {
     scrollObserver.disconnect();
     scrollObserver = null;
   }
+  
+  // Cancel all scroll render tasks
+  Object.values(scrollRenderTasks).forEach(task => {
+    if (task) task.cancel();
+  });
+  scrollRenderTasks = {};
   
   const scrollContainer = document.getElementById('pdfScrollContainer');
   if (scrollContainer) {
@@ -346,6 +388,7 @@ async function initScrollView() {
   try {
     const firstPage = await pdfDoc.getPage(1);
     const firstViewport = firstPage.getViewport({ scale: zoomLevel * 1.5 });
+    const dpr = window.devicePixelRatio || 1;
 
     for (let i = 1; i <= totalPages; i++) {
       const pageWrap = document.createElement('div');
@@ -357,8 +400,10 @@ async function initScrollView() {
 
       const pageCanvas = document.createElement('canvas');
       pageCanvas.id = `page-canvas-${i}`;
-      pageCanvas.width = firstViewport.width;
-      pageCanvas.height = firstViewport.height;
+      pageCanvas.width = firstViewport.width * dpr;
+      pageCanvas.height = firstViewport.height * dpr;
+      pageCanvas.style.width = firstViewport.width + 'px';
+      pageCanvas.style.height = firstViewport.height + 'px';
       pageWrap.appendChild(pageCanvas);
 
       const label = document.createElement('div');
@@ -402,18 +447,27 @@ async function initScrollView() {
 
 async function renderScrollPage(pageNum) {
   if (scrollPagesRendered[pageNum] === zoomLevel) return;
+
+  if (scrollRenderTasks[pageNum]) {
+    scrollRenderTasks[pageNum].cancel();
+    delete scrollRenderTasks[pageNum];
+  }
+
   scrollPagesRendered[pageNum] = zoomLevel;
 
   try {
     const page = await pdfDoc.getPage(pageNum);
     const viewport = page.getViewport({ scale: zoomLevel * 1.5 });
+    const dpr = window.devicePixelRatio || 1;
 
     const canvas = document.getElementById(`page-canvas-${pageNum}`);
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
+    canvas.width = viewport.width * dpr;
+    canvas.height = viewport.height * dpr;
+    canvas.style.width = viewport.width + 'px';
+    canvas.style.height = viewport.height + 'px';
 
     const wrap = document.getElementById(`page-wrap-${pageNum}`);
     if (wrap) {
@@ -421,8 +475,25 @@ async function renderScrollPage(pageNum) {
       wrap.style.height = viewport.height + 'px';
     }
 
-    await page.render({ canvasContext: ctx, viewport }).promise;
+    const transform = dpr !== 1 
+      ? [dpr, 0, 0, dpr, 0, 0] 
+      : null;
+
+    const renderContext = {
+      canvasContext: ctx,
+      viewport: viewport,
+      transform: transform
+    };
+
+    const task = page.render(renderContext);
+    scrollRenderTasks[pageNum] = task;
+
+    await task.promise;
+    delete scrollRenderTasks[pageNum];
   } catch (err) {
+    if (err.name === 'RenderingCancelledException') {
+      return;
+    }
     console.error('Error rendering scroll page ' + pageNum, err);
   }
 }
@@ -435,6 +506,7 @@ async function updateScrollScale() {
   try {
     const firstPage = await pdfDoc.getPage(1);
     const firstViewport = firstPage.getViewport({ scale: zoomLevel * 1.5 });
+    const dpr = window.devicePixelRatio || 1;
 
     for (let i = 1; i <= totalPages; i++) {
       const wrap = document.getElementById(`page-wrap-${i}`);
@@ -442,11 +514,25 @@ async function updateScrollScale() {
       if (wrap && canvas) {
         wrap.style.width = firstViewport.width + 'px';
         wrap.style.height = firstViewport.height + 'px';
-        canvas.width = firstViewport.width;
-        canvas.height = firstViewport.height;
+        canvas.width = firstViewport.width * dpr;
+        canvas.height = firstViewport.height * dpr;
+        canvas.style.width = firstViewport.width + 'px';
+        canvas.style.height = firstViewport.height + 'px';
+
+        if (scrollRenderTasks[i]) {
+          scrollRenderTasks[i].cancel();
+          delete scrollRenderTasks[i];
+        }
       }
     }
     loadingEl.classList.add('hidden');
+
+    if (scrollObserver) {
+      document.querySelectorAll('.pdf-scroll-page-wrap').forEach(wrap => {
+        scrollObserver.unobserve(wrap);
+        scrollObserver.observe(wrap);
+      });
+    }
   } catch (err) {
     console.error(err);
   }
