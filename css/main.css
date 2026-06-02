@@ -3,24 +3,24 @@
 ══════════════════════════════════════════════ */
 
 :root {
-  /* ── Warm vintage palette ────────────────── */
-  --bg:         #0f0d0b;
-  --bg2:        #1a1612;
-  --bg3:        #241f19;
-  --surface:    #2a231c;
-  --surface2:   #352d24;
-  --border:     rgba(196,162,101,0.10);
-  --border2:    rgba(196,162,101,0.20);
-  --text:       #ede6db;
-  --text2:      #b0a48e;
-  --text3:      #7a6f5f;
-  --accent:     #c4a265;
-  --accent2:    #ddbf7e;
-  --accent3:    #f0dca8;
-  --glow:       rgba(196,162,101,0.20);
-  --glow2:      rgba(196,162,101,0.08);
-  --red:        #c87058;
-  --teal:       #8ab0a0;
+  /* ── Royal British Vintage Palette ────────── */
+  --bg:         #0a0908;
+  --bg2:        #141210;
+  --bg3:        #1d1a17;
+  --surface:    #2a2622;
+  --surface2:   #353129;
+  --border:     rgba(178,145,86,0.15);
+  --border2:    rgba(178,145,86,0.25);
+  --text:       #f0ede8;
+  --text2:      #c9bfad;
+  --text3:      #8b8273;
+  --accent:     #b2915a;
+  --accent2:    #d4af69;
+  --accent3:    #e8d4a0;
+  --glow:       rgba(212,175,105,0.15);
+  --glow2:      rgba(212,175,105,0.06);
+  --red:        #a85a42;
+  --teal:       #5d8b7f;
 
   /* ── Radius & Shadows ───────────────────── */
   --radius:     8px;
@@ -93,40 +93,40 @@ body.pdf-open { overflow: hidden; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 22px 48px;
-  background: rgba(15,13,11,0.7);
-  backdrop-filter: blur(20px) saturate(1.2);
-  border-bottom: 1px solid var(--border);
+  padding: 24px 48px;
+  background: rgba(10,9,8,0.85);
+  backdrop-filter: blur(25px) saturate(1.15);
+  border-bottom: 2px solid rgba(178,145,86,0.15);
   transition: var(--transition);
 }
 
 #navbar::after {
   content: '';
   position: absolute;
-  bottom: -1px; left: 48px; right: 48px;
+  bottom: -2px; left: 48px; right: 48px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  opacity: 0.3;
+  background: linear-gradient(90deg, transparent, var(--accent2), transparent);
+  opacity: 0.35;
 }
 
 #navbar.scrolled {
-  padding: 14px 48px;
-  background: rgba(15,13,11,0.92);
+  padding: 16px 48px;
+  background: rgba(10,9,8,0.95);
 }
 
 .nav-logo {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   text-decoration: none;
   cursor: pointer;
 }
 
 .logo-symbol {
-  font-size: 18px;
-  color: var(--accent);
-  animation: spin-slow 12s linear infinite;
-  filter: drop-shadow(0 0 6px var(--glow));
+  font-size: 20px;
+  color: var(--accent2);
+  animation: spin-slow 15s linear infinite;
+  filter: drop-shadow(0 0 8px var(--glow));
 }
 
 @keyframes spin-slow {
@@ -135,44 +135,47 @@ body.pdf-open { overflow: hidden; }
 }
 
 .logo-text {
-  font-family: var(--font-display);
-  font-size: 15px;
+  font-family: var(--font-serif);
+  font-size: 14px;
   font-weight: 400;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.18em;
   color: var(--accent2);
+  text-transform: uppercase;
+  font-style: italic;
 }
 
 .nav-links {
   display: flex;
-  gap: 40px;
+  gap: 48px;
 }
 
 .nav-link {
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 400;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--text2);
   text-decoration: none;
   position: relative;
-  padding-bottom: 6px;
+  padding-bottom: 8px;
   transition: color var(--transition);
+  border-bottom: 2px solid transparent;
 }
 
 .nav-link::after {
   content: '';
   position: absolute;
   bottom: 0; left: 50%;
-  width: 0; height: 1px;
-  background: var(--accent);
+  width: 0; height: 2px;
+  background: var(--accent2);
   transition: all var(--transition);
   transform: translateX(-50%);
 }
 
 .nav-link:hover,
 .nav-link.active {
-  color: var(--accent2);
+  color: var(--accent3);
 }
 
 .nav-link:hover::after,
@@ -211,7 +214,7 @@ body.pdf-open { overflow: hidden; }
 /* ── Section Ornament (decorative divider) ── */
 .section-ornament {
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: 64px;
   position: relative;
   display: flex;
   align-items: center;
@@ -223,49 +226,65 @@ body.pdf-open { overflow: hidden; }
 .section-ornament::after {
   content: '';
   flex: 1;
-  max-width: 120px;
+  max-width: 140px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  opacity: 0.35;
+  background: linear-gradient(90deg, transparent, var(--accent2), transparent);
+  opacity: 0.4;
 }
 
 .section-ornament span {
-  color: var(--accent);
-  font-size: 16px;
-  padding: 0 20px;
-  opacity: 0.5;
+  color: var(--accent2);
+  font-size: 18px;
+  padding: 0 24px;
+  opacity: 0.6;
   filter: drop-shadow(0 0 4px var(--glow));
 }
 
 /* ══════════════════ SECTION HEADERS ═══════════════════ */
 .section-header {
   text-align: center;
-  margin-bottom: 64px;
+  margin-bottom: 72px;
+  position: relative;
+  padding-bottom: 36px;
+  border-bottom: 1px solid rgba(178,145,86,0.12);
+}
+
+.section-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent2), transparent);
+  opacity: 0.5;
 }
 
 .section-tag {
   display: inline-block;
   font-family: var(--font-body);
   font-size: 10px;
-  letter-spacing: 0.35em;
+  letter-spacing: 0.4em;
   text-transform: uppercase;
   color: var(--accent);
   background: transparent;
-  border-top: 1px solid rgba(196,162,101,0.25);
-  border-bottom: 1px solid rgba(196,162,101,0.25);
-  padding: 8px 24px;
+  border-top: 1px solid rgba(178,145,86,0.25);
+  border-bottom: 1px solid rgba(178,145,86,0.25);
+  padding: 10px 28px;
   border-radius: 0;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
+  letter-spacing: 0.35em;
 }
 
 .section-title {
   font-family: var(--font-display);
   font-size: clamp(2.8rem, 5.5vw, 5rem);
   font-weight: 400;
-  line-height: 1.1;
+  line-height: 1.15;
   color: var(--text);
-  margin-bottom: 20px;
-  letter-spacing: 0.01em;
+  margin-bottom: 24px;
+  letter-spacing: 0.02em;
 }
 
 .section-title em {
@@ -279,9 +298,9 @@ body.pdf-open { overflow: hidden; }
   color: var(--text2);
   font-weight: 300;
   font-style: italic;
-  max-width: 500px;
+  max-width: 540px;
   margin: 0 auto;
-  line-height: 1.8;
+  line-height: 1.9;
 }
 
 /* ══════════════════ UTILITY ═══════════════════ */
